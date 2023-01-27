@@ -17,7 +17,7 @@ A starter project that combines Next.js, Tailwind CSS, Eslint, Prettier and Husk
 **Clone the repository**
 
 ```bash
-git clone https://github.com/<username>/next-tailwind-eslint-prettier-husky-boilerplate.git
+git clone https://github.com/skarthikeyan96/next-tailwind-eslint-prettier-husky-boilerplate.git
 ```
 
 **Install dependencies**
