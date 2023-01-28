@@ -19,7 +19,8 @@
     "moment": "^2.29.4",
     "next": "latest",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "word-wrap": "^1.2.3"
   },
   "devDependencies": {
     "@types/node": "18.11.3",

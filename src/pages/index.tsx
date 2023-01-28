@@ -1,7 +1,8 @@
 import Head from 'next/head'
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Listbox, Transition } from '@headlessui/react'
 import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
+import axios from 'axios'
 
 import Navbar from '../components/navbar'
 import type { NextPage } from 'next'
@@ -11,9 +12,27 @@ import themes from '../themes'
 const Home: NextPage = () => {
   const initialYear = new Date().getFullYear() - 1
   const [selectedYear, setSelectedYear] = useState(initialYear)
-  const [username, setUsername] = useState('')
+  const [username, setUsername] = useState('imkarthikeyan')
   const [selectedTheme, setSelectedTheme] = useState('default')
+  const [svgResponse, setSvgResponse] = useState('')
+
   const themeKeys = Object.keys(themes)
+
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/dev?username=${username}&year=${selectedYear}&theme=${selectedTheme}`
+
+  const readmeText = `![blogStatsImage](${url})`
+
+  const fetchSvg = async () => {
+    const response = await axios.get(url)
+    //https://stackoverflow.com/questions/23223718/failed-to-execute-btoa-on-window-the-string-to-be-encoded-contains-characte
+    const base64 = btoa(unescape(encodeURIComponent(response.data)))
+    const svgUrl = 'data:image/svg+xml;base64,' + base64
+    setSvgResponse(svgUrl)
+  }
+
+  useEffect(() => {
+    fetchSvg()
+  }, [selectedTheme])
 
   return (
     <div>
@@ -23,8 +42,9 @@ const Home: NextPage = () => {
       </Head>
 
       <Navbar />
-      <div className="block px-8 py-6 rounded-lg shadow-md bg-white max-w-md mx-auto mt-2">
-        <form>
+
+      <main className="flex px-8 py-6 justify-center space-x-8">
+        <div className="px-8 py-6 rounded-lg shadow-md bg-white mt-2 max-w-xl w-full border">
           <div className="form-group mb-4">
             <input
               type="username"
@@ -53,7 +73,7 @@ const Home: NextPage = () => {
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                <Listbox.Options className="z-10 absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                   {getYears().map((year) => (
                     <Listbox.Option
                       key={year}
@@ -91,6 +111,13 @@ const Home: NextPage = () => {
               </Transition>
             </div>
           </Listbox>
+
+          <button
+            onClick={() => fetchSvg()}
+            className="w-full rounded-lg text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium text-sm px-5 py-2.5 text-center mb-2"
+          >
+            Generate Card
+          </button>
 
           <Listbox value={selectedTheme} onChange={setSelectedTheme}>
             <div className="relative mb-4">
@@ -147,15 +174,12 @@ const Home: NextPage = () => {
               </Transition>
             </div>
           </Listbox>
+        </div>
 
-          <button
-            type="submit"
-            className="w-full rounded-lg text-white bg-gradient-to-br from-pink-500 to-orange-400 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 font-medium text-sm px-5 py-2.5 text-center mb-2"
-          >
-            Generate Card
-          </button>
-        </form>
-      </div>
+        <div className="px-8 py-6 max-w-xl rounded-lg shadow-md bg-white  mt-2 bg-gradient-to-br from-pink-500 to-orange-400">
+          <img src={svgResponse} className="w-full max-w-full h-auto border" />
+        </div>
+      </main>
     </div>
   )
 }
