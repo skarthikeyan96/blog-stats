@@ -9,12 +9,7 @@
   "settings": {
     "import/resolver": {
       "node": {
-        "extensions": [
-          ".js",
-          ".jsx",
-          ".ts",
-          ".tsx"
-        ]
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
       }
     }
   },
@@ -28,18 +23,8 @@
       {
         "newlines-between": "always",
         "groups": [
-          [
-            "builtin",
-            "external"
-          ],
-          [
-            "internal",
-            "parent",
-            "sibling",
-            "index",
-            "object",
-            "type"
-          ]
+          ["builtin", "external"],
+          ["internal", "parent", "sibling", "index", "object", "type"]
         ]
       }
     ]
