@@ -27,7 +27,7 @@ export default async function handler(
             })
 
 
-            const filtered = years.filter((y: any, index: number) => years.indexOf(y) === index)
+            const filtered = years.filter((y: number, index: number) => years.indexOf(y) === index)
 
             console.log(filtered)
 
