@@ -9,15 +9,15 @@ import type { NextPage } from 'next'
 import { getYears } from '../../helper'
 import themes from '../themes'
 
-const Home: NextPage = () => {
+const HashnodeStats = () => {
   const initialYear = new Date().getFullYear() - 1
   const [selectedYear, setSelectedYear] = useState(initialYear)
-  const [username, setUsername] = useState('imkarthikeyan')
+  const [username, setUsername] = useState('imkarthikeyans')
   const [selectedTheme, setSelectedTheme] = useState('default')
   const [svgResponse, setSvgResponse] = useState('')
   const [copy, setCopied] = useState(false)
   const themeKeys = Object.keys(themes)
-  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/dev?username=${username}&year=${selectedYear}&theme=${selectedTheme}`
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/hashnode?username=${username}&year=${selectedYear}&theme=${selectedTheme}`
 
   const readmeText = `![blogStatsImage](${url})`
 
@@ -36,7 +36,7 @@ const Home: NextPage = () => {
   return (
     <div>
       <Head>
-        <title>Blog stats</title>
+        <title>Hashnode Blog stats</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -49,7 +49,7 @@ const Home: NextPage = () => {
               htmlFor="email_address"
               className="form-label inline-block mb-2 sm:text-sm text-gray-700"
             >
-              Dev.to username
+              Hashnode username
             </label>
 
             <input
@@ -219,4 +219,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export default HashnodeStats

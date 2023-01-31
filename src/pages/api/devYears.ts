@@ -28,7 +28,7 @@ export default async function handler(
         (y: number, index: number) => years.indexOf(y) === index
       )
 
-      console.log(filtered)
+      // console.log(filtered)
 
       res.status(200).json(filtered)
     } else {
