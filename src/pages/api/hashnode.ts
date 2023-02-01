@@ -1,134 +1,13 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import axios from 'axios'
-import moment from 'moment'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import themes from '../../themes'
 import Card from '../../components/card'
-
-const getData = async (
-  username: string,
-  bigData: any,
-  page: any
-): Promise<any> => {
-  console.log('calling', page)
-  const query = `
-  query myQuery($username: String!, $page: Int){
-    user(username: $username) {
-      publication {
-        posts(page: $page) {
-          title
-          brief
-          slug
-          dateAdded
-          totalReactions
-          partOfPublication
-        }
-      }
-    }
-  }`
-
-  const variables = {
-    username,
-    page: page,
-  }
-
-  const graphqlQuery = {
-    query: query,
-    variables: variables,
-  }
-
-  try {
-    const response = await axios({
-      url: `https://api.hashnode.com/`,
-      method: 'post',
-      headers: {
-        'content-type': 'application/json',
-      },
-      data: graphqlQuery,
-    })
-
-    if (response.data?.data?.user?.publication?.posts.length > 0) {
-      bigData.push(response.data.data.user.publication.posts)
-
-      page++
-      await new Promise((resolve) => setTimeout(resolve, 200)) // setup a sleep depend your api request/second requirement.
-
-      return await getData(username, bigData, page)
-    }
-
-    return console.info('Data fetch complete')
-  } catch (e) {
-    console.log('something went wrong')
-  }
-}
-
-const getUserInfo = async (username: string) => {
-  const query = `
-  query myQuery($username: String!){
-    user(username: $username) {
-      name
-      username,
-      numPosts
-   }
-  }`
-
-  const variables = {
-    username,
-  }
-
-  const graphqlQuery = {
-    query: query,
-    variables: variables,
-  }
-
-  try {
-    const response = await axios({
-      url: `https://api.hashnode.com/`,
-      method: 'post',
-      headers: {
-        'content-type': 'application/json',
-      },
-      data: graphqlQuery,
-    })
-
-    return response.data
-  } catch (e) {
-    console.log('something went wrong')
-  }
-}
-
-const getCurrentYearPosts = (posts: any, currentYear: any) => {
-  return posts.filter((post: any) => {
-    const publishedYear = moment(post.dateAdded).year()
-
-    return publishedYear === parseInt(currentYear)
-  })
-}
-
-const getMostReactedBlog = (
-  currentYearPosts: any
-): { count: number; item: any } => {
-  if (currentYearPosts.length > 0) {
-    const reactionsArray = currentYearPosts.map(
-      (post: { totalReactions: any }) => post.totalReactions
-    )
-
-    const maxReactedBlogIndex = reactionsArray.indexOf(
-      Math.max(...reactionsArray)
-    )
-    return {
-      count: Math.max(...reactionsArray),
-      item: currentYearPosts[maxReactedBlogIndex],
-    }
-  }
-
-  return {
-    count: 0,
-    item: {
-      title: '',
-    },
-  }
-}
+import {
+  getUserInfo,
+  getData,
+  getCurrentYearHashnodePosts,
+  getMostReactedHashnodePost,
+} from '../../../helper'
 
 export default async function handler(
   req: NextApiRequest,
@@ -136,9 +15,7 @@ export default async function handler(
 ) {
   const username: any = req.query.username || 'imkarthikeyans'
   const currentYear = req.query.year || '2022'
-
   const articleResponse: any = []
-
   const page = 0
 
   const {
@@ -149,13 +26,10 @@ export default async function handler(
 
   if (articleResponse?.length !== 0) {
     const articles = articleResponse.flat()
-    const currentYearPost = getCurrentYearPosts(articles, currentYear)
-
-    const mostReactedBlog = getMostReactedBlog(currentYearPost)
-
+    const currentYearPost = getCurrentYearHashnodePosts(articles, currentYear)
+    const mostReactedBlog = getMostReactedHashnodePost(currentYearPost)
     const renderHeading = `${user.name}'s year on Hashnode`
     const totalPostString = `💯 Total Posts : ${user.numPosts}`
-
     const currentTotalPosts = `📊 No of posts ( ${currentYear} ): ${currentYearPost.length}`
     const mostReactedCountString = `😃 Most Reactions: ${mostReactedBlog?.count}`
     const mostReactedCountPostString = `🔥 Most reacted post: ${mostReactedBlog?.item.title}`
@@ -163,7 +37,10 @@ export default async function handler(
     // @ts-ignore
     const theme = themes[req.query.theme || 'default']
 
-    let props: any = {}
+    let props: Card = {
+      text_color: '',
+      mostReactedCountPostString: '',
+    }
 
     props = {
       heading: renderHeading,

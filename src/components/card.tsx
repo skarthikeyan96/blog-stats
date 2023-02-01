@@ -1,85 +1,6 @@
-import wrap from 'word-wrap'
-import { getMultiline } from '../../helper'
+import { handleMostCommentedString, mostReactedPost } from '../../helper'
 
-const handleMostCommentedString = (
-  mostCommentedPostString: string,
-  text_color: string
-) => {
-  if (mostCommentedPostString) {
-    const post = wrap(mostCommentedPostString, {
-      width: 80,
-    }).split('\n')
-
-    // if it has only one element
-    if (post.length === 1) {
-      return `<text x="20" y="245" font-family="Verdana" font-size="14" fill="#${text_color}"> ${post[0].trim()} </text>
-       `
-    }
-
-    return `<text x="20" y="265" font-family="Verdana" font-size="14" fill="#${text_color}"> ${getMultiline(
-      80,
-      mostCommentedPostString,
-      '0'
-    )} </text>
-    `
-  }
-  return ''
-}
-
-const handleMostUsedTagsString = (
-  mostCommentedPostString: string,
-  text_color: string
-) => {
-  if (mostCommentedPostString) {
-    const post = wrap(mostCommentedPostString, {
-      width: 80,
-    }).split('\n')
-
-    // if it has only one element
-    if (post.length === 1) {
-      return `<text x="20" y="245" font-family="Verdana" font-size="14" fill="#${text_color}"> ${post[0].trim()} </text>
-       `
-    }
-
-    return `<text x="20" y="265" font-family="Verdana" font-size="14" fill="#${text_color}"> ${getMultiline(
-      80,
-      mostCommentedPostString,
-      '0'
-    )} </text>
-    `
-  }
-  return ''
-}
-
-const mostReactedPost = (
-  isHashnode: boolean,
-  mostReactedCountPostString: string,
-  text_color: string
-) => {
-  if (isHashnode) {
-    return ` <text
-        x="20"
-        y="185"
-        font-family="Verdana"
-        font-size="14"
-        fill="#${text_color}"
-      >
-        ${getMultiline(60, mostReactedCountPostString, '0')}
-      </text>`
-  }
-
-  return ` <text
-  x="20"
-  y="215"
-  font-family="Verdana"
-  font-size="14"
-  fill="#${text_color}"
->
-  ${getMultiline(80, mostReactedCountPostString, '0')}
-</text>`
-}
-
-const Card = (props: any) => {
+const Card = (props: Card) => {
   const {
     bg_color,
     text_color,
@@ -92,12 +13,8 @@ const Card = (props: any) => {
     mostReactedCountPostString,
     totalPost,
     no_posts_text,
-    showBorder,
     isHashnode,
   } = props
-
-  const borderColor =
-    showBorder === 'true' ? '5px solid #99E6B3' : 'transparent'
 
   const statsLogo = isHashnode
     ? `<svg width="70px" height="70px" viewBox="-50 -30 460 400" role="img" class="stats-card__logo"  xmlns="http://www.w3.org/2000/svg">
@@ -129,19 +46,18 @@ const Card = (props: any) => {
   }
 
   const height = isHashnode ? '240' : '320'
-
   const viewBox = isHashnode ? '0 0 600 240' : '0 0 600 320'
 
+  //prettier-ignore
   return `
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" width="600px" height="${height}px">
-      <foreignObject width="600px" height="${height}px">
-      <div xmlns="http://www.w3.org/1999/xhtml">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" width="600px" height="${height}px">
+  <foreignObject width="600px" height="${height}px">
+    <div xmlns="http://www.w3.org/1999/xhtml">
       <div class="card">
-      <style>
-      .card {
+        <style>
+          .card {
       background-color: #${bg_color};
       color: #${text_color};
-      border: ${borderColor}
       }
       .stats-card__header{
       display: flex;
@@ -159,50 +75,35 @@ const Card = (props: any) => {
       padding-right: 10px;
       fill: #${title_color}
       }
-      </style>
-      <div class="card-details">
-      <svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox="${viewBox}">
-      <foreignObject width="600px" height="${height}px">
-      <div xmlns="http://www.w3.org/1999/xhtml">
-      <div class="stats-card__header"> 
-      <p class="stats-card__heading"> ${heading}</p>
-
-      ${statsLogo}
+        </style>
+        <div class="card-details">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="${viewBox}">
+            <foreignObject width="600px" height="${height}px">
+              <div xmlns="http://www.w3.org/1999/xhtml">
+                <div class="stats-card__header">
+                  <p class="stats-card__heading">
+                    ${heading}
+                  </p>
+                  ${statsLogo}
+                </div>
+              </div>
+            </foreignObject>
+            <g>
+              <text x="20" y="100" font-size="14" font-family="Verdana" fill="#${text_color}">${totalPost}</text>
+              <text x="20" y="125" font-size="14" font-family="Verdana" fill="#${text_color}">${currentTotalPosts}</text>
+              <text x="20" y="155" font-size="14" font-family="Verdana" fill="#${text_color}">${mostReactedCountString}</text>
+              <text x="20" y="185" font-family="Verdana" font-size="14" fill="#${text_color}"> ${mostUsedTags || ""} </text>
+              ${mostReactedPost( text_color, mostReactedCountPostString, isHashnode)}
+              ${handleMostCommentedString(text_color,mostCommentedPostString)}
+            </g>
+          </svg>
+        </div>
       </div>
-      </div>
-      </foreignObject>
+    </div>
+  </foreignObject>
+</svg>
 
-
-      <g>
-
-
-
-
-      <text x="20" y="100" font-size="14" font-family="Verdana" fill="#${text_color}">${totalPost}</text>
-      <text x="20" y="125" font-size="14" font-family="Verdana" fill="#${text_color}">${currentTotalPosts}</text>
-      <text x="20" y="155" font-size="14" font-family="Verdana" fill="#${text_color}">${mostReactedCountString}</text>
-      
-      <text x="20" y="185" font-family="Verdana" font-size="14" fill="#${text_color}"> ${
-    mostUsedTags || ''
-  } </text>
-
-  ${mostReactedPost(isHashnode, mostReactedCountPostString, text_color)}
- 
-      ${handleMostCommentedString(mostCommentedPostString, text_color)} 
-      
-      
-
-      </g>
-      </svg>
-
-      </div>
-
-
-      </div>
-
-      </div>
-      </foreignObject>
-      </svg>`
+  `
 }
 
 export default Card

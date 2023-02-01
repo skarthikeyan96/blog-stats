@@ -5,7 +5,6 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import axios from 'axios'
 
 import Navbar from '../components/navbar'
-import type { NextPage } from 'next'
 import { getYears } from '../../helper'
 import themes from '../themes'
 
@@ -17,16 +16,19 @@ const HashnodeStats = () => {
   const [svgResponse, setSvgResponse] = useState('')
   const [copy, setCopied] = useState(false)
   const themeKeys = Object.keys(themes)
+  const [loading, setLoading] = useState(false)
   const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/hashnode?username=${username}&year=${selectedYear}&theme=${selectedTheme}`
 
   const readmeText = `![blogStatsImage](${url})`
 
   const fetchSvg = async () => {
+    setLoading(true)
     const response = await axios.get(url)
     //https://stackoverflow.com/questions/23223718/failed-to-execute-btoa-on-window-the-string-to-be-encoded-contains-characte
     const base64 = btoa(unescape(encodeURIComponent(response.data)))
     const svgUrl = 'data:image/svg+xml;base64,' + base64
     setSvgResponse(svgUrl)
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -197,12 +199,17 @@ const HashnodeStats = () => {
         </div>
 
         <div className="flex flex-col">
-          <div className="h-auto px-8 py-6 max-w-xl rounded-lg shadow-md bg-white  mt-2 bg-gradient-to-br from-pink-500 to-orange-400">
-            <img
-              src={svgResponse}
-              className="w-full max-w-full h-auto border justify-center items-center"
-            />
-          </div>
+          {loading ? (
+            <p> Loading... </p>
+          ) : (
+            <div className="h-auto px-8 py-6 max-w-xl rounded-lg shadow-md bg-white  mt-2 bg-gradient-to-br from-pink-500 to-orange-400">
+              <img
+                src={svgResponse}
+                className="w-full max-w-full h-auto border justify-center items-center"
+              />
+            </div>
+          )}
+
           <input className="mt-4 border w-full py-2 px-4" value={readmeText} />
           <button
             className="mt-4 py-2 px-4 w-full rounded bg-blue-500 text-white"
