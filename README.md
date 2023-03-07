@@ -38,5 +38,18 @@
 
 ![blogStatsImage](https://blog-stats-dev.vercel.app//api/hashnode?username=imkarthikeyans&year=2022&theme=default)
 
+### Themes
 
-# Themes
+To enable a theme, append `&theme=` followed by the theme name to the end of the source URL:
+
+```md
+[![GitHub Streak](https://streak-stats.demolab.com/?user=DenverCoder1&theme=dark)](https://git.io/streak-stats)
+```
+
+|     Theme      |                            Preview                            |
+| :------------: | :-----------------------------------------------------------: |
+|   `default`    |          <img width="608" alt="image" src="https://user-images.githubusercontent.com/23126394/223491939-9b9c4a8b-c849-4ef2-b342-bc900c646bd2.png">          |
+|     `dark`     |          <img width="600" alt="image" src="https://user-images.githubusercontent.com/23126394/223495905-79f24fcc-400e-472b-80c4-d93808cdfc14.png">            |
+
+
+
