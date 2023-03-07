@@ -43,7 +43,7 @@
 To enable a theme, append `&theme=` followed by the theme name to the end of the source URL:
 
 ```md
-[![GitHub Streak](https://streak-stats.demolab.com/?user=DenverCoder1&theme=dark)](https://git.io/streak-stats)
+![blogStatsImage](https://blog-stats-dev.vercel.app//api/dev?username=imkarthikeyans&year=2022&theme=default)
 ```
 
 |     Theme      |                            Preview                            |
