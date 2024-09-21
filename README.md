@@ -21,7 +21,7 @@
 
 ## Preview 
 
-![blogStatsImage](https://blog-stats-dev.vercel.app//api/dev?username=imkarthikeyan&year=2022&theme=default)
+![blogStatsImage](https://blog-stats-pi.vercel.app//api/dev?username=imkarthikeyan&year=2022&theme=default)
 
 # Hashnode Stats Card
 
@@ -36,7 +36,7 @@
 
 ## Preview
 
-![blogStatsImage](https://blog-stats-dev.vercel.app//api/hashnode?username=imkarthikeyans&year=2022&theme=default)
+![blogStatsImage](https://blog-stats-pi.vercel.app//api/hashnode?username=imkarthikeyans&year=2022&theme=default)
 
 ### Themes
 
